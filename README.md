@@ -1,90 +1,60 @@
 Multi-Agent RAG System for Competitor Analysis
-Overview:
-This project implements a Multi-Agent Retrieval-Augmented Generation (RAG) system to automate competitor analysis for a given company. Traditional competitor analysis is time-consuming and manual, often requiring analysts to gather, validate, and synthesize information from multiple sources. This system decomposes the task into specialized agents that collaborate sequentially to produce a structured, evidence-backed competitor analysis report.
-The solution integrates:
-  Multi-agent orchestration (LangGraph)
-  Web retrieval (Tavily)
-  Vector storage and retrieval (ChromaDB)
-  LLM-based report generation
-  The output is a precise, actionable competitor analysis with explicit citations.
 
-Key Features
+This code implements a Multi-Agent Retrieval-Augmented Generation (RAG) system to automate competitor analysis for a given company. The workflow decomposes competitor analysis into specialized agents that retrieve web data, store it in a vector database, and generate a structured, evidence-backed report.
 
-✅ Accepts a company name as input
-✅ Identifies key competitors
-✅ Retrieves up-to-date web data
-✅ Stores retrieved content in a vector database
-✅ Generates a structured competitor comparison report
-✅ Appends deterministic source URLs for traceability
+What It Does
 
-System Architecture
-The pipeline is implemented as a sequential multi-agent workflow:
-1. Question Generator Agent
-    Validates the company name
-    Identifies the industry sector
-  Generates targeted competitor analysis questions
-2. Data Retrieval & Storage Agent
-    Uses Tavily to retrieve web-based information
-    Stores results in ChromaDB for retrieval-augmented generation.
-  Extracts competitor names directly from retrieved content
-3. Report Drafter Agent
-    Retrieves relevant context from ChromaDB
-    Generates a structured competitor analysis report
-    Deterministically appends source URLs for reliability
+Given a company name, the system:
 
-Project Structure
-.
-├── nc_multi_agent.py      # Main Python implementation
-├── README.md                   # Project documentation
-└── requirements.txt            # Python dependencies (optional)
+Identifies key competitors
 
-Installation
-1. Clone the repository
-git clone <your-repo-url>
-cd <repo-name>
+Retrieves up-to-date web information
 
-2. Install dependencies
-pip install -r requirements.txt
+Stores evidence in a vector database
 
+Generates a structured competitor analysis
 
-Required libraries include:
-  langchain
-  langgraph
-  chromadb
-  tavily
-  openai
-  pydantic
+Appends verifiable source URLs
 
+Architecture (High-Level)
+
+The system follows a sequential multi-agent workflow:
+
+Question Generator – validates the company and generates analysis questions
+
+Retrieval & Storage – fetches web data (Tavily) and stores it in ChromaDB
+
+Report Drafter – retrieves context and produces a structured analysis with citations
+
+Project File
+nc_multi_agent_rag.py   # Main implementation
+
+Setup
 Environment Variables
 
- API keys are NOT hard-coded and must be provided via environment variables.
-
-Set the following before running:
+API keys are supplied via environment variables and are not hard-coded.
 
 export OPEN_API_KEY="your-openai-api-key"
 export TAVILY_API_KEY="your-tavily-api-key"
 
 
-Optional (only if using a custom endpoint):
+Optional:
 
 export OPENAI_BASE_URL="https://api.openai.com/v1"
 
+Usage
+from nc_multi_agent_rag import run_competitor_analysis
 
-Note: The base URL is intentionally not hard-coded to ensure portability and security when uploading to GitHub.
-
-How to Run
-Example usage
-from nc_multi_agent import run_nc_multi_agent
-
-result = run__nc_multi_agent(
+result = run_competitor_analysis(
     company_name="AbbVie",
     max_num_of_questions=5
 )
 
 print(result["report"])
 
+Output
 
-The output will be a Markdown-formatted competitor analysis report containing:
+The system returns a Markdown report with:
 
 Executive Summary
 
@@ -98,28 +68,18 @@ Strategic Recommendations
 
 Sources (URLs)
 
-Output Example (Structure)
-Competitor Analysis Report
-1) Executive Summary
-2) Key Competitors
-3) Comparison Table
-4) Key Insights
-5) Strategic Recommendations
-6) Sources
+Design Notes
 
-Design Notes & Debugging Decisions
-    Tool outputs from agents are not assumed to be JSON-clean
-    Vector storage is invoked directly to ensure deterministic behavior
-    Competitor extraction is done explicitly from the retrieved content
-    Source URLs are appended programmatically, not left to the LLM
-    This ensures reliability, reproducibility, and rubric compliance
+Tool outputs are not assumed to be JSON-clean
 
-Limitations & Future Improvements
-  Market share estimates are qualitative unless structured financial data is added.
-  Additional agents could be added for:
-  Financial benchmarking
-  Regulatory risk analysis
-  Time-series competitor tracking
+Vector storage is invoked deterministically
 
+Competitor extraction is explicit
 
+Source URLs are appended programmatically
 
+This ensures reliability, reproducibility, and grading clarity.
+
+Summary
+
+This project demonstrates how multi-agent systems combined with RAG can deliver scalable, explainable competitor analysis with traceable evidence for strategic decision-making.
